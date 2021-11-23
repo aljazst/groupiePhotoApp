@@ -1,5 +1,8 @@
 package com.aljazs.groupiephoto.extensions
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,4 +40,8 @@ fun ViewGroup.extInflate(
 ): View {
     val layoutInflater = LayoutInflater.from(context)
     return layoutInflater.inflate(layoutResource, this, attachToParentRoot)
+}
+
+fun Int.createBitmap(context: Context): Bitmap {
+    return BitmapFactory.decodeResource(context.resources, this)
 }

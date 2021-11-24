@@ -6,5 +6,7 @@ object Constants {
 
     const val CHANNEL_ID = "Chanel id"
 
+    const val NOTIFICATION_CHANNEL = "CHANNEL_ID"
+
 
 }

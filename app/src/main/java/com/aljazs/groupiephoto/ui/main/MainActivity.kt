@@ -16,16 +16,19 @@ import com.aljazs.groupiephoto.common.Constants.CHANNEL_ID
 import com.aljazs.groupiephoto.databinding.ActivityMainBinding
 import com.aljazs.groupiephoto.extensions.createBitmap
 import com.aljazs.groupiephoto.extensions.extClick
+import com.aljazs.groupiephoto.util.NotificationsUtil
 import java.util.*
 import kotlin.concurrent.schedule
 
-private lateinit var binding: ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     //https://github.com/elfer07/SampleAndroidNotification/blob/main/app/src/main/java/ar/com/notificacionesandroid/MainActivity.kt
     private lateinit var notificationOne: Notification
-    private val notificationOneId = 0
+    private var notificationOneId = 0
 
 
     private lateinit var notificationTwo: Notification
@@ -57,13 +60,20 @@ class MainActivity : AppCompatActivity() {
         buildNotificationOne()
         buildNotificationThree()
 
+
+        NotificationsUtil.createNotificationChannel(this) // Create a notification channel for basic/non-expandable notification
+       // NotificationsUtil.createExpandableNotificationChannel(this) // Crea
+
         val notificationManager = NotificationManagerCompat.from(this)
 
         binding.button.extClick {
             //notificationManager.notify(notificationOneId, notificationOne)
-            Timer().schedule(10000){
+/*            Timer().schedule(10000){
                 notificationManager.notify(notificationThreeId, notificationThree)
-            }
+            }*/
+            NotificationsUtil.buildNotification(this)
+            notificationOneId = NotificationsUtil.BASIC_NOTIFICATION_ID
+            NotificationsUtil.displayNotification(this,notificationOneId)
 
         }
 

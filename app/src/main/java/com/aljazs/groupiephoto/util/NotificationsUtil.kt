@@ -13,10 +13,21 @@ import com.aljazs.groupiephoto.ui.main.MainActivity
 
 object NotificationsUtil {
 
-    private lateinit var notification: Notification
+
     private val notificationOneId = 0
 
     private var notificationBuilder: NotificationCompat.Builder? = null
+
+
+    // Notification ids
+    const val BASIC_NOTIFICATION_ID = 1
+    const val ACTION_BUTTON_NOTIFICATION_ID = 2
+    private const val PROGRESS_INDICATOR_NOTIFICATION_ID = 3
+    const val BIG_PICTURE_STYLE_NOTIFICATION_ID = 4
+    const val BIG_TEXT_STYLE_NOTIFICATION_ID = 5
+    const val INBOX_STYLE_NOTIFICATION_ID = 6
+    const val MEDIA_STYLE_NOTIFICATION_ID = 7
+    const val CUSTOM_NOTIFICATION_ID = 8
 
     // Notification Channel Group
     const val CHANNEL_GROUP_ID_ONE = "channel_group_id_1"
@@ -43,7 +54,7 @@ object NotificationsUtil {
         val specialPendingIntent =
             PendingIntent.getActivity(context, 0, specialIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
+        notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_baseline_bike) // Display a small icon on the left side.
             .setContentTitle("Cycling") // Notification Title
             .setContentText("Let take a ride") // Notification Subtitle.
@@ -53,7 +64,7 @@ object NotificationsUtil {
 //            .setContentIntent(regularPendingIntent) // Open an activity on existing task
             .setAutoCancel(true) // Dismiss/Cancel the notification on Tap.
             .setGroup("GROUP_NAME") //specify which group this notification belongs to
-            .setNumber(10).build() // specify badge number
+            .setNumber(10) // specify badge number
     }
 
     fun createNotificationChannel(context: Context) {

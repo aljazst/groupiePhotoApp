@@ -14,16 +14,13 @@ import com.aljazs.groupiephoto.common.Constants
 import com.aljazs.groupiephoto.util.NotificationsUtil
 
 
-private const val TAG = "MyBroadcastReceiver"
-
 class NotificationBroadcastReceiver : BroadcastReceiver() {
 
-
+    private val TAG = "MyBroadcastReceiver"
 
     override fun onReceive(context: Context, intent: Intent) {
-        val notificationId = intent.getIntExtra("notificationId", 0)
-        // if you want cancel notification
-        Log.i(TAG,"Testing123")
+     //   val notificationId = intent.getIntExtra("notificationId", 0)
+
 
         intent.also { intent ->
          //   intent.setAction("com.example.broadcast.MY_NOTIFICATION")
@@ -43,13 +40,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     }
 
     fun snozeActionHandler(context: Context) {
-        val notificationManager =
-            NotificationsUtil.getNotificationManager(context) // Get the NotificationManager
-        val _notification: Notification?
+        val notificationManager = NotificationsUtil.getNotificationManager(context) // Get the NotificationManager
+        val newNotification: Notification?
 
-        // We use NotificationManager.getActiveNotifications() if we are targeting SDK 23
-        // and above, but we are targeting devices with lower SDK API numbers, so we saved the
-        // builder globally and get the notification back to recreate it later (the else part).
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val activeNotifications =
                 NotificationsUtil.getNotificationManager(context).activeNotifications
@@ -62,16 +55,13 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                     }
                 }
             } else {
-                _notification =
-                    reCreateNotification(context)?.build() // Create a new notification from the scratch.
-                _notification?.let {
-                    fireSnoozeNotification(it, notificationManager)
+                newNotification = reCreateNotification(context)?.build() // Create a new notification from the scratch.
+                newNotification?.let { fireSnoozeNotification(it, notificationManager)
                 }
             }
 
         } else {
-            var builderInstance =
-                NotificationsUtil.getNotificationBuilder() // Get the notification builder instance
+            var builderInstance = NotificationsUtil.getNotificationBuilder() // Get the notification builder instance
 
             // If notification builder instance is null recreate a notification
             if (builderInstance == null) {
@@ -101,7 +91,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         return NotificationsUtil.buildNotificationWithActionButtons(context)
     }
 
-    fun dismissActionHandler(context: Context) {
+    private fun dismissActionHandler(context: Context) {
         val notificationManagerCompat = NotificationManagerCompat.from(context)
         notificationManagerCompat.cancel(NotificationsUtil.ACTION_BUTTON_NOTIFICATION_ID)
     }

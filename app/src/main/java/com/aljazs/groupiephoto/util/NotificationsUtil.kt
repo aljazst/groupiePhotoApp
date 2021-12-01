@@ -6,11 +6,9 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.aljazs.groupiephoto.R
 import com.aljazs.groupiephoto.common.Constants
 import com.aljazs.groupiephoto.common.Constants.NOTIFICATION_CHANNEL
-import com.aljazs.groupiephoto.handler.NotificationActionService
 import com.aljazs.groupiephoto.handler.NotificationBroadcastReceiver
 import com.aljazs.groupiephoto.ui.main.MainActivity
 
@@ -53,13 +51,12 @@ object NotificationsUtil {
 
         notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_baseline_bike) // Display a small icon on the left side.
-            .setContentTitle("Cycling") // Notification Title
-            .setContentText("Let take a ride") // Notification Subtitle.
+            .setContentTitle("groupie") // Notification Title
+            .setContentText("Let take a picture") // Notification Subtitle.
             .setPriority(NotificationCompat.PRIORITY_HIGH) // Set the interrupting behaviour by giving priority.
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 //            .setContentIntent(specialPendingIntent) // Open an activity on new task.
             .setVibrate(longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400))
-
             .setContentIntent(regularPendingIntent) // Open an activity on existing task
             .setAutoCancel(true) // Dismiss/Cancel the notification on Tap.
             .setGroup("GROUP_NAME") //specify which group this notification belongs to

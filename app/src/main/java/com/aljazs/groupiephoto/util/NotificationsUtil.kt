@@ -6,9 +6,10 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.aljazs.groupiephoto.R
+import com.aljazs.groupiephoto.common.Constants
 import com.aljazs.groupiephoto.common.Constants.NOTIFICATION_CHANNEL
+import com.aljazs.groupiephoto.handler.NotificationBroadcastReceiver
 import com.aljazs.groupiephoto.ui.main.MainActivity
 
 object NotificationsUtil {
@@ -20,14 +21,8 @@ object NotificationsUtil {
 
 
     // Notification ids
-    const val BASIC_NOTIFICATION_ID = 1
     const val ACTION_BUTTON_NOTIFICATION_ID = 2
-    private const val PROGRESS_INDICATOR_NOTIFICATION_ID = 3
-    const val BIG_PICTURE_STYLE_NOTIFICATION_ID = 4
-    const val BIG_TEXT_STYLE_NOTIFICATION_ID = 5
-    const val INBOX_STYLE_NOTIFICATION_ID = 6
-    const val MEDIA_STYLE_NOTIFICATION_ID = 7
-    const val CUSTOM_NOTIFICATION_ID = 8
+
 
     // Notification Channel Group
     const val CHANNEL_GROUP_ID_ONE = "channel_group_id_1"
@@ -56,15 +51,64 @@ object NotificationsUtil {
 
         notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_baseline_bike) // Display a small icon on the left side.
-            .setContentTitle("Cycling") // Notification Title
-            .setContentText("Let take a ride") // Notification Subtitle.
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Set the interrupting behaviour by giving priority.
+            .setContentTitle("groupie") // Notification Title
+            .setContentText("Let take a picture") // Notification Subtitle.
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Set the interrupting behaviour by giving priority.
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setContentIntent(specialPendingIntent) // Open an activity on new task.
-//            .setContentIntent(regularPendingIntent) // Open an activity on existing task
+//            .setContentIntent(specialPendingIntent) // Open an activity on new task.
+            .setVibrate(longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400))
+            .setContentIntent(regularPendingIntent) // Open an activity on existing task
             .setAutoCancel(true) // Dismiss/Cancel the notification on Tap.
             .setGroup("GROUP_NAME") //specify which group this notification belongs to
             .setNumber(10) // specify badge number
+            .setDefaults(Notification.DEFAULT_VIBRATE or Notification.DEFAULT_LIGHTS)
+    }
+
+    // Build notification with snooze & dismiss action buttons
+    fun buildNotificationWithActionButtons(context: Context): NotificationCompat.Builder? {
+
+        // Snooze Action
+        val snoozeIntent = Intent(context, NotificationBroadcastReceiver::class.java).apply {
+            action = Constants.actionConstants.SNOOZE_ACTION
+        }
+
+        // Dismiss Action
+        val dismissIntent = Intent(context, NotificationBroadcastReceiver::class.java).apply {
+            action = Constants.actionConstants.DISMISS_ACTION
+        }
+
+        val fullScreenIntent = Intent(context, MainActivity::class.java)
+        val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, 0)
+
+        val snoozePendingIntent = PendingIntent.getBroadcast(context, 0, snoozeIntent, 0)
+        val dismissPendingIntent = PendingIntent.getBroadcast(context, 0, dismissIntent, 0)
+
+        notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL)
+            .setSmallIcon(R.drawable.ic_baseline_bike) // Display a small icon on the left side.
+            .setContentTitle("Basket") // Notification Title
+            .setContentText("Fuck this guckingdf") // Notification Subtitle.
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Set the interrupting behaviour by giving priority.
+            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .addAction(
+                NotificationCompat.Action(
+                    R.drawable.ic_baseline_bike,
+                    "Snooze",
+                    snoozePendingIntent
+                )
+            ) // Add Snooze action button
+            .addAction(
+                NotificationCompat.Action(
+                    R.drawable.ic_baseline_bike,
+                    "Dismiss",
+                    dismissPendingIntent
+                )
+            ) // Add Dismiss action button.
+            .setAutoCancel(true) // Dismiss/Cancel the notification on Tap.
+            .setGroup("GROUP_NAME") //specify which group this notification belongs to
+
+        setNotificationBuilderInstance(notificationBuilder!!)
+
+        return notificationBuilder
     }
 
     fun createNotificationChannel(context: Context) {
@@ -73,13 +117,15 @@ object NotificationsUtil {
             val channelDescription =
                 context.getString(R.string.channel_number_one_desc) // Channel Description
             val importance =
-                NotificationManager.IMPORTANCE_DEFAULT  // Channel Interrupting Level or priority.
+                NotificationManager.IMPORTANCE_HIGH  // Channel Interrupting Level or priority.
             val notificationChannel =
                 NotificationChannel(NOTIFICATION_CHANNEL, channelName, importance).apply {
                     description = channelDescription // Channel Description [Optional]
                     lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
                     group = CHANNEL_GROUP_ID_ONE
                     setShowBadge(true)
+                    enableVibration(true)
+                    enableLights(true)
                 }
 
             Log.i("TAG", "createNotificationChannel: ${notificationChannel.lockscreenVisibility}")
@@ -98,12 +144,21 @@ object NotificationsUtil {
         }
     }
 
-    private fun getNotificationManager(context: Context): NotificationManager {
+
+    fun getNotificationManager(context: Context): NotificationManager {
         return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
+    // Get notification builder instance
+    fun getNotificationBuilder(): NotificationCompat.Builder? = notificationBuilder
+
     fun displayNotification(context: Context, notificationId: Int) {
         getNotificationManager(context).notify(notificationId, notificationBuilder?.build())
+    }
+
+    // Set notification builder instance
+    private fun setNotificationBuilderInstance(builder: NotificationCompat.Builder) {
+        this.notificationBuilder = builder
     }
 
 

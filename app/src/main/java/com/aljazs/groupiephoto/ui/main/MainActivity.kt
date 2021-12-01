@@ -31,21 +31,6 @@ class MainActivity : AppCompatActivity() {
     private var notificationOneId = 0
 
 
-    private lateinit var notificationTwo: Notification
-    private val notificationTwoId = 1
-
-    private lateinit var notificationThree: Notification
-    private val notificationThreeId = 2
-
-    private lateinit var notificationFour: Notification
-    private val notificationFourId = 3
-
-    private lateinit var notificationFive: Notification
-    private val notificationFiveId = 4
-
-    private lateinit var customNotification: Notification
-    private val customNotificationId = 5
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,25 +40,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.text1.text = "bananarama"
 
-        createNotificationChannel()
-
-        buildNotificationOne()
-        buildNotificationThree()
 
 
         NotificationsUtil.createNotificationChannel(this) // Create a notification channel for basic/non-expandable notification
        // NotificationsUtil.createExpandableNotificationChannel(this) // Crea
 
-        val notificationManager = NotificationManagerCompat.from(this)
 
         binding.button.extClick {
             //notificationManager.notify(notificationOneId, notificationOne)
-/*            Timer().schedule(10000){
-                notificationManager.notify(notificationThreeId, notificationThree)
-            }*/
-            NotificationsUtil.buildNotification(this)
-            notificationOneId = NotificationsUtil.BASIC_NOTIFICATION_ID
-            NotificationsUtil.displayNotification(this,notificationOneId)
+          Timer().schedule(1000) {
+          }
+              NotificationsUtil.buildNotificationWithActionButtons(applicationContext)
+              notificationOneId = NotificationsUtil.ACTION_BUTTON_NOTIFICATION_ID
+              NotificationsUtil.displayNotification(applicationContext, notificationOneId)
 
         }
 
@@ -90,51 +69,7 @@ class MainActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)*/
     }
 
-    private fun buildNotificationOne() {
-        val myBitmap = R.drawable.toronto.createBitmap(this)
 
-        notificationOne = NotificationCompat.Builder(this, CHANNEL_ID).also {
-            it.setSmallIcon(R.drawable.ic_launcher_background)
-            it.setContentTitle("Notification with Image")
-            it.setContentText("Body's Notification")
-            it.setStyle(
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(myBitmap)
-                    .bigLargeIcon(null)
-            )
-            it.setLargeIcon(myBitmap)
 
-        }.build()
-    }
-    private fun buildNotificationThree() {
-        notificationThree = NotificationCompat.Builder(this, CHANNEL_ID).also {
-            it.setSmallIcon(R.drawable.ic_launcher_background)
-            it.setContentTitle("morenofernando@gmail.com")
-            it.setContentText("You have 3 unread emails")
-            it.setStyle(
-                NotificationCompat.InboxStyle()
-                    .addLine("See free Android Source Codes from GitHub")
-                    .addLine("You have won 1000 dollars!!")
-                    .addLine("You item you have bought was sent.")
-            )
-        }.build()
-    }
-
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name ="Name" // getString(R.string.channel_name)
-            val descriptionText ="description" // getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
 
 }

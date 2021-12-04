@@ -1,7 +1,7 @@
 # groupiePhotoApp
 An app that sends push notifications to remind you to take a picture when doing sometging or having a good time with friends. 
 
-## Features roadmap 
+## app
 
 🚧 This project is a work in progress, some features(most of them) are still missing and they will arrive in the future.
 

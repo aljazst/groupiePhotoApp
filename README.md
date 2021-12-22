@@ -4,6 +4,7 @@ An app that sends push notifications to remind you to take a picture when doing 
 ## app
 
 🚧 This project is a work in progress, some features(most of them) are still missing and they will arrive in the future.
+
 Implemented: - basic push notification
 
 
